@@ -3,6 +3,7 @@ import sys
 import warnings
 from urllib.parse import urlparse
 
+
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import ElasticNet
@@ -12,6 +13,14 @@ from sklearn.model_selection import train_test_split
 import mlflow
 import mlflow.sklearn # https://mlflow.org/docs/latest/python_api/index.html
 from mlflow.models import infer_signature
+
+import dagshub
+dagshub.init(repo_owner='ozair.rahman', repo_name='INFT-41000-In-Class-Activity-3', mlflow=True)
+
+# For remote server only
+remote_server_uri = "https://dagshub.com/ozair.rahman/INFT-41000-In-Class-Activity-3.mlflow"
+mlflow.set_tracking_uri(remote_server_uri)
+
 #mlflow.start_run()
 
 logging.basicConfig(level=logging.WARN)
@@ -52,9 +61,6 @@ if __name__ == "__main__":
     alpha = float(sys.argv[1]) if len(sys.argv) > 1 else 0.5 # https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html
     l1_ratio = float(sys.argv[2]) if len(sys.argv) > 2 else 0.5
 
-    # For remote server only
-    remote_server_uri = "https://dagshub.com/ozair.rahman/INFT-41000-In-Class-Activity-3.mlflow"
-    mlflow.set_tracking_uri(remote_server_uri)
     with mlflow.start_run():
         lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
         lr.fit(train_x, train_y)
